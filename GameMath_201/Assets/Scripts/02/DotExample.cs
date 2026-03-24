@@ -6,6 +6,7 @@ public class DotExample : MonoBehaviour
     public float viewAngle = 60f;
     public float viewDistance = 5f;
     private bool checkPlayer = false;
+
     private void Update()
     {
         //실습 3
