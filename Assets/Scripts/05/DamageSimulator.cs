@@ -15,8 +15,6 @@ public class DamageSimulator : MonoBehaviour
     private string weaponName;
     private float stdDevMult, critRate, critMult;
 
-    private bool isFailed = false;
-
     private void Start()
     {
         SetWeapon(0);
@@ -68,32 +66,94 @@ public class DamageSimulator : MonoBehaviour
         UpdateUI();
     }
 
-    public void OnAttack()
+    private float CalculateSingleAttack(out bool isFailed, out bool isWeakPoint, out bool isCrit)
     {
         isFailed = false;
-
+        isWeakPoint = false;
+        
         float sd = baseDamage * stdDevMult;
         float normalDamage = GetNormalStdDevDamage(baseDamage, sd);
-
-        bool isCrit = Random.value < critRate;
-        float finalDamage = isCrit ? normalDamage * critMult : normalDamage;
 
         if (normalDamage < baseDamage - (2 * sd))
         {
             isFailed = true;
+            isCrit = false;
+            return 0f;
         }
 
-        // 약점 공격
         if (normalDamage > baseDamage + (2 * sd))
         {
-            finalDamage *= 2;
+            isWeakPoint = true;
         }
 
-        attackCount++;
-        totalDamage += finalDamage;
+        isCrit = Random.value < critRate;
+        
+        float finalDamage = isCrit ? normalDamage * critMult : normalDamage;
 
-        string critMark = isCrit ? "<color=red>[치명타!]</color>" : "";
-        logText.text = string.Format("{0}데미지 : {1:F1}", critMark, finalDamage);
+        if (isWeakPoint)
+        {
+            finalDamage *= 2f;
+        }
+
+        return finalDamage;
+    }
+    public void OnAttack()
+    {
+        float finalDamage = CalculateSingleAttack(out bool isFailed, out bool isWeakPoint, out bool isCrit);
+
+        attackCount++;
+
+        if (isFailed)
+        {
+            logText.text = "<color=grey>명중 실패...</color>";
+        }
+        else
+        {
+            totalDamage += finalDamage;
+            string critMark = isCrit ? "<color=red>[치명타!]</color> " : "";
+            string weakMark = isWeakPoint ? "<color=blue>[약점공격!]</color> " : "";
+            logText.text = string.Format("{0}{1}데미지 : {2:F1}", weakMark, critMark, finalDamage);
+        }
+
+        UpdateUI();
+    }
+
+    public void OnAttack1000()
+    {
+        int weakPointCount = 0;
+        int failCount = 0;
+        int critCount = 0;
+        float maxDamage = 0f;
+
+        float batchDamage = 0f;
+
+        for (int i = 0; i < 1000; i++)
+        {
+            float damage = CalculateSingleAttack(out bool isFailed, out bool isWeakPoint, out bool isCrit);
+
+            if (isFailed) failCount++;
+            if (isWeakPoint) weakPointCount++;
+            if (isCrit) critCount++;
+
+            if (damage > maxDamage)
+            {
+                maxDamage = damage;
+            }
+
+            batchDamage += damage;
+        }
+
+        attackCount += 1000;
+        totalDamage += batchDamage;
+
+        logText.text = string.Format(
+            "[1000회 공격 결과 요약]\n" +
+            "약점 공격 횟수: {0}회\n" +
+            "명중 실패 횟수: {1}회\n" +
+            "전체 치명타 횟수: {2}회\n" +
+            "최대 데미지 기록: {3:F1}",
+            weakPointCount, failCount, critCount, maxDamage);
+
         UpdateUI();
     }
 
