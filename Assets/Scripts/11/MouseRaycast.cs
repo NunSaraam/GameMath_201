@@ -18,8 +18,9 @@ public class MouseRaycast : MonoBehaviour
     {
         if (!value.isPressed) return;
 
-        Vector2 mousePosition = Mouse.current.position.ReadValue();
+        if (GameManager.Instance != null && GameManager.Instance.isBallsMoving) return;
 
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit, rayDistance))
@@ -28,14 +29,23 @@ public class MouseRaycast : MonoBehaviour
 
             if (rb != null)
             {
-                Vector3 hitPoint = hit.point;
-                Vector3 center = rb.gameObject.transform.position;
-                Vector3 forceDirection = center - hitPoint;
-                forceDirection.y = 0f;
-                forceDirection.Normalize();
+                bool is1PBall = rb.gameObject.CompareTag("Player1");
+                bool is2PBall = rb.gameObject.CompareTag("Player2");
 
-                rb.AddForce(forceDirection * 10f, ForceMode.Impulse);
+                if ((GameManager.Instance.is1PTurn && is1PBall) ||
+                    (!GameManager.Instance.is1PTurn && is2PBall))
+                {
+                    Vector3 hitPoint = hit.point;
+                    Vector3 center = rb.transform.position;
+                    Vector3 forceDirection = center - hitPoint;
+                    forceDirection.y = 0f;
+                    forceDirection.Normalize();
 
+                    rb.AddForce(forceDirection * 10f, ForceMode.Impulse);
+
+                    if (GameManager.Instance != null)
+                        GameManager.Instance.OnTurnStarted();
+                }
             }
         }
     }
