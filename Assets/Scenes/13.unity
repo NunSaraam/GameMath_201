@@ -392,7 +392,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 727093363}
-  - component: {fileID: 727093362}
+  - component: {fileID: 727093365}
+  - component: {fileID: 727093364}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -400,23 +401,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &727093362
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 727093361}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56656fa0b44492b41a0c05963ea03ad7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RandomTerrain
-  width: 30
-  depth: 30
-  minheight: 0
-  maxheight: 8
-  cubePrefab: {fileID: 1211295780013582123, guid: fbb9b24baa99a8d4aa9104de9063525d, type: 3}
 --- !u!4 &727093363
 Transform:
   m_ObjectHideFlags: 0
@@ -432,6 +416,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &727093364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 727093361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec5ab7f9ad8716b4a85b17202086fce4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PerlinTerrain
+  width: 30
+  depth: 30
+  scale: 0.1
+  heightMultiplier: 8
+  dirtPrefab: {fileID: 1326860809120171996, guid: c8464dc423171f64aaa37af869820f0d, type: 3}
+  grassPrefab: {fileID: 1326860809120171996, guid: c1575e3259f2a674d92ded19c4309a8b, type: 3}
+  waterPrefab: {fileID: 1326860809120171996, guid: 3491cc51f8ccbff41b308f44a8c79e4f, type: 3}
+  waterHeight: 3
+--- !u!114 &727093365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 727093361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75546b8bc0db7404d90db85084815beb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimplePerlinNoise
+  seed: 0
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
